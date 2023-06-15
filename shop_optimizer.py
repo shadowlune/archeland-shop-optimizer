@@ -33,6 +33,19 @@ class BuffEnum(Enum):
     necklace = 8
     shell = 9
 
+class BuffFlag(IntFlag):
+    dairy = auto()
+    decoration = auto()
+    drink = auto()
+    flower = auto()
+    food = auto()
+    gourmet = auto()
+    light = auto()
+    magic = auto()
+    necklace = auto()
+    shell = auto()
+
+
 """
 Our objective function is to maximize silver income, with a secondary objective of maximizing gold income.
 Therefore, our comparison operators will be built around these assumptions.
@@ -93,6 +106,12 @@ class Income:
 class HeroV2:
     name: str
     buffs: dict[BuffEnum]
+
+@dataclass
+class ShopItem:
+    name: str
+    income: Income
+    buff_types: BuffFlag
 
 
 """
