@@ -1,3 +1,4 @@
+import heapq
 import json
 
 from dataclasses import dataclass
@@ -194,9 +195,12 @@ class ShopOptimizerV2:
 
     def run(self):
         max_profit, item_idxs, hero_idxs = 0, [], []
+
+        self.profits = []
         for hero_combo in tqdm(self.hero_combos):
             profit, item_combo = self.__eval_hero_item_set(hero_combo)
-            if profit > max_profit:
+            if profit >= max_profit:
+                heapq.heappush(self.profits, (profit, item_combo, hero_combo))
                 max_profit = profit
                 item_idxs, hero_idxs = item_combo, hero_combo
                 
@@ -212,15 +216,21 @@ class ShopOptimizerV2:
         top_six_indices = np.argpartition(prod, -6)[-6:]
         profit = np.sum(prod[top_six_indices])
         return profit, list(top_six_indices)
+    
+
+def print_profit_info(opt, rank, max_profit, item_idxs, hero_idxs):
+    heroes = [opt.hero_names[idx] for idx in hero_idxs]
+    items = [opt.shop_item_names[idx] for idx in item_idxs]
+    print(f"Results for rank {rank}. Profit: {max_profit}")
+    print(f"Hero names: {heroes}")
+    print(f"Item names: {items}")
+
 
 opt = ShopOptimizerV2()
 max_profit, item_idxs, hero_idxs = opt.run()
-print(f"Max Profit: {max_profit}")
-# print(f"Item indices: {item_idxs}")
-# print(f"Hero indices: {hero_idxs}")
 
-heroes = [opt.hero_names[idx] for idx in hero_idxs]
-items = [opt.shop_item_names[idx] for idx in item_idxs]
 
-print(f"Hero names: {heroes}")
-print(f"Item names: {items}")
+top_ten_profits = heapq.nlargest(10, opt.profits, key=lambda x: x[0])
+
+for rank, (profit, item_idxs, hero_idxs) in enumerate(top_ten_profits):
+    print_profit_info(opt, rank, profit, item_idxs, hero_idxs)
