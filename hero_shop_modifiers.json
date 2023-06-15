@@ -1,0 +1,268 @@
+[
+    {
+        "name": "avia",
+        "buffs": {
+            "magic": 0.3,
+            "necklace": 0.42
+        }
+    },
+    {
+        "name": "nola",
+        "buffs": {
+            "gourmet": 0.3,
+            "necklace": 0.42
+        }
+    },
+    {
+        "name": "valak",
+        "buffs": {
+            "magic": 0.42,
+            "decoration": 0.3
+        }
+    },
+    {
+        "name": "michael",
+        "buffs": {
+            "shell": 0.42,
+            "gourmet": 0.3
+        }
+    },
+    {
+        "name": "atum",
+        "buffs": {
+            "magic": 0.3,
+            "decoration": 0.3
+        }
+    },
+    {
+        "name": "alecto",
+        "buffs": {
+            "shell": 0.3,
+            "dairy": 0.3
+        }
+    },
+    {
+        "name": "ibn",
+        "buffs": {
+            "light": 0.3,
+            "gourmet": 0.3
+        }
+    },
+    {
+        "name": "susie_and_susan",
+        "buffs": {
+            "necklace": 0.3,
+            "flower": 0.3
+        }
+    },
+    {
+        "name": "coyle",
+        "buffs": {
+            "drink": 0.2,
+            "dairy": 0.3
+        }
+    },
+    {
+        "name": "peacock",
+        "buffs": {
+            "food": 0.2,
+            "decoration": 0.3
+        }
+    },
+    {
+        "name": "kabir",
+        "buffs": {
+            "drink": 0.3,
+            "necklace": 0.2
+        }
+    },
+    {
+        "name": "mirro",
+        "buffs": {
+            "food": 0.2,
+            "gourmet": 0.3
+        }
+    },
+    {
+        "name": "layla",
+        "buffs": {
+            "light": 0.3,
+            "food": 0.12
+        }
+    },
+    {
+        "name": "lancelot",
+        "buffs": {
+            "drink": 0.12,
+            "magic": 0.3
+        }
+    },
+    {
+        "name": "helga",
+        "buffs": {
+            "shell": 0.2,
+            "necklace": 0.2
+        }
+    },
+    {
+        "name": "melissa",
+        "buffs": {
+            "shell": 0.12,
+            "dairy": 0.2
+        }
+    },
+    {
+        "name": "saoirse",
+        "buffs": {
+            "light": 0.12,
+            "dairy": 0.2
+        }
+    },
+    {
+        "name": "brown",
+        "buffs": {
+            "flower": 0.2,
+            "dairy": 0.12
+        }
+    },
+    {
+        "name": "hazel",
+        "buffs": {
+            "shell": 0.3,
+            "food": 0.42
+        }
+    },
+    {
+        "name": "irina",
+        "buffs": {
+            "dairy": 0.3,
+            "decoration": 0.3
+        }
+    },
+    {
+        "name": "saken",
+        "buffs": {
+            "light": 0.42,
+            "food": 0.3
+        }
+    },
+    {
+        "name": "alicia",
+        "buffs": {
+            "magic": 0.42,
+            "flower": 0.3
+        }
+    },
+    {
+        "name": "belet",
+        "buffs": {
+            "drink": 0.42,
+            "food": 0.3
+        }
+    },
+    {
+        "name": "kasie",
+        "buffs": {
+            "necklace": 0.3,
+            "light": 0.42
+        }
+    },
+    {
+        "name": "erica",
+        "buffs": {
+            "drink": 0.3,
+            "gourmet": 0.42
+        }
+    },
+    {
+        "name": "claphare",
+        "buffs": {
+            "flower": 0.42,
+            "dairy": 0.3
+        }
+    },
+    {
+        "name": "catherine",
+        "buffs": {
+            "necklace": 0.3,
+            "flower": 0.3
+        }
+    },
+    {
+        "name": "charlotte",
+        "buffs": {
+            "shell": 0.3,
+            "light": 0.3
+        }
+    },
+    {
+        "name": "richard",
+        "buffs": {
+            "drink": 0.3,
+            "decoration": 0.3
+        }
+    },
+    {
+        "name": "clarice",
+        "buffs": {
+            "necklace": 0.3,
+            "light": 0.2
+        }
+    },
+    {
+        "name": "margaret",
+        "buffs": {
+            "magic": 0.3,
+            "decoration": 0.2
+        }
+    },
+    {
+        "name": "semi",
+        "buffs": {
+            "shell": 0.2,
+            "food": 0.3
+        }
+    },
+    {
+        "name": "siegfried",
+        "buffs": {
+            "drink": 0.3,
+            "food": 0.2
+        }
+    },
+    {
+        "name": "gin",
+        "buffs": {
+            "food": 0.3,
+            "necklace": 0.3
+        }
+    },
+    {
+        "name": "ygg",
+        "buffs": {
+            "shell": 0.3,
+            "flower": 0.2
+        }
+    },
+    {
+        "name": "gab",
+        "buffs": {
+            "dairy": 0.2,
+            "gourmet": 0.2
+        }
+    },
+    {
+        "name": "lina",
+        "buffs": {
+            "dairy": 0.2,
+            "gourmet": 0.2
+        }
+    },
+    {
+        "name": "capet",
+        "buffs": {
+            "light": 0.2,
+            "food": 0.2
+        }
+    }
+]
