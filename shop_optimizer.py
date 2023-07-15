@@ -61,7 +61,7 @@ class Income:
         if not isinstance(other, Income):
             raise TypeError(f"Cannot add Income and {type(other)}")
         return Income(silver=self.silver+other.silver, gold=self.gold+other.gold, powder=self.powder+other.powder)
-    
+
     # radd operator must be implemented for sum() function to work properly.
     # https://stackoverflow.com/questions/1218710/pythons-sum-and-non-integer-values
     def __radd__(self, other):
@@ -81,12 +81,12 @@ class Income:
                 return Income(silver=self.silver*other.silver, gold=self.gold*other.gold, powder=self.powder*other.powder)
             case default:
                 raise TypeError(f"Cannot multiply Income and {type(other)}")
-    
+
     def __ge__(self, other):
         if not isinstance(other, Income):
             raise TypeError(f"Cannot compare Income and {type(other)}")
         return self.silver > other.silver or self.silver == other.silver and self.gold >= other.gold
-    
+
     def __gt__(self, other):
         if not isinstance(other, Income):
             raise TypeError(f"Cannot compare Income and {type(other)}")
@@ -94,10 +94,10 @@ class Income:
 
     def __lt__(self, other):
         return not self.__ge__(other)
-    
+
     def __leq__(self, other):
         return not self.__gt__(other)
-    
+
     def __eq__(self, other):
         if not isinstance(other, Income):
             raise TypeError(f"Cannot compare Income and {type(other)}")
@@ -128,7 +128,7 @@ class ShopOptimizerV2:
     def __load_data(self):
         with open('shop_values.json') as f:
             shop_data = json.load(f)
-        
+
         self.shop_dict = {
             data['name']: ShopItem(
                 name=data['name'],
@@ -159,31 +159,33 @@ class ShopOptimizerV2:
         }
 
         self.hero_names = list(self.hero_dict.keys())
-    
-    
-    #                                magic     shell        gourmet                  
-    # hero_combined(1,2,3,16,17)      0.42        0.3           0.2   
+
+
+    #                                magic     shell        gourmet
+    # hero_combined(1,2,3,16,17)      0.42        0.3           0.2
     # -> base   magic shell gourmet
     #    1       .42      .3    .2  .....  ->
     def __build_matrices(self):
-        # Build the item matrix
+        # Build the item matrix, factoring in all buffs
         self.item_matrix = np.array([[
-                shop_item.income.silver 
+                shop_item.income.silver
                 if buff in shop_item.buff_types
-                else 0 
+                else 0
                 for buff in BuffEnum
             ]
             for shop_item in self.shop_dict.values()
         ])
-        self.item_matrix = np.hstack((
-            np.array([shop_item.income.silver for shop_item in self.shop_dict.values()]).reshape(-1,1),
-            self.item_matrix
-        ))
+
+        # # Prepend the base income to the item matrix
+        # self.item_matrix = np.hstack((
+        #     np.array([shop_item.income.silver for shop_item in self.shop_dict.values()]).reshape(-1,1),
+        #     self.item_matrix
+        # ))
 
         self.hero_matrix = np.array([[
                 hero.buffs[buff]
                 if buff in hero.buffs.keys()
-                else 0 
+                else 0
                 for buff in BuffEnum
             ]
             for hero in self.hero_dict.values()
@@ -191,43 +193,92 @@ class ShopOptimizerV2:
 
         # For our numpy array slicing to work correctly, we need to spawn index masks like so
         self.hero_combos = [list(mask) for mask in combinations(range(len(self.hero_names)), r=5)]
+        self.item_combos = [list(mask) for mask in combinations(range(len(self.shop_item_names)), r=6)]
 
 
-    def run(self):
+    def run(self, hero_combo=True):
+        if hero_combo:
+            return self.__run_hero_combo()
+        else:
+            return self.__run_item_combo()
+
+
+    def __run_hero_combo(self):
         max_profit, item_idxs, hero_idxs = 0, [], []
+
+        # # Prepend the base income to the item matrix
+        item_matrix = np.hstack((
+            np.array([shop_item.income.silver for shop_item in self.shop_dict.values()]).reshape(-1,1),
+            self.item_matrix
+        ))
+        print(item_matrix.shape)
 
         self.profits = []
         for hero_combo in tqdm(self.hero_combos):
-            profit, item_combo = self.__eval_hero_item_set(hero_combo)
+            profit, item_combo = self.__eval_hero_item_set(hero_combo, item_matrix)
+            heapq.heappush(self.profits, (profit, item_combo, hero_combo))
             if profit >= max_profit:
-                heapq.heappush(self.profits, (profit, item_combo, hero_combo))
                 max_profit = profit
                 item_idxs, hero_idxs = item_combo, hero_combo
-                
+
         return max_profit, item_idxs, hero_idxs
-    
-    def __eval_hero_item_set(self, hero_combo):
+
+    def __run_item_combo(self):
+        max_profit, item_idxs, hero_idxs = 0, [], []
+        # X = self.hero_matrix
+        # hero_matrix = np.hstack((np.ones((X.shape[0], 1)), X))
+
+        self.profits = []
+        for item_combo in tqdm(self.item_combos):
+            profit, hero_combo = self.__eval_item_hero_set(item_combo, self.hero_matrix)
+            heapq.heappush(self.profits, (profit, item_combo, hero_combo))
+            if profit >= max_profit:
+                max_profit = profit
+                item_idxs, hero_idxs = item_combo, hero_combo
+
+        return max_profit, item_idxs, hero_idxs
+
+
+    # This variant takes a hero combo and evaluates against a fixed item matrix
+    def __eval_hero_item_set(self, hero_combo, item_matrix):
         hero_submatrix = self.hero_matrix[hero_combo]
         hero_vector = np.sum(hero_submatrix, axis=0)
         # Prepend 1 to the vector to account for base income dot product
         hero_vector = np.insert(hero_vector, 0, 1, axis=0)
-        prod = self.item_matrix @ hero_vector
+        prod = item_matrix @ hero_vector
+        print(prod)
         # https://stackoverflow.com/questions/6910641/how-do-i-get-indices-of-n-maximum-values-in-a-numpy-array
         top_six_indices = np.argpartition(prod, -6)[-6:]
         profit = np.sum(prod[top_six_indices])
         return profit, list(top_six_indices)
-    
+
+
+    # This variant takes an item combo and evaluates against a fixed hero matrix
+    def __eval_item_hero_set(self, item_combo, hero_matrix):
+        item_submatrix = self.item_matrix[item_combo]
+        item_vector = np.sum(item_submatrix, axis=0)
+        prod = hero_matrix @ item_vector
+
+        top_five_indices = np.argpartition(prod, -5)[-5:]
+        base_profit = np.sum(np.max(item_submatrix, axis=1))
+        bonus_profit = np.sum(prod[top_five_indices])
+        profit = base_profit + bonus_profit
+        return profit, list(top_five_indices)
+
+
+
+
 
 def print_profit_info(opt, rank, max_profit, item_idxs, hero_idxs):
-    heroes = [opt.hero_names[idx] for idx in hero_idxs]
-    items = [opt.shop_item_names[idx] for idx in item_idxs]
+    heroes = sorted([opt.hero_names[idx] for idx in hero_idxs])
+    items = sorted([opt.shop_item_names[idx] for idx in item_idxs])
     print(f"Results for rank {rank}. Profit: {max_profit}")
     print(f"Hero names: {heroes}")
     print(f"Item names: {items}")
 
 
 opt = ShopOptimizerV2()
-max_profit, item_idxs, hero_idxs = opt.run()
+max_profit, item_idxs, hero_idxs = opt.run(hero_combo=False)
 
 
 top_ten_profits = heapq.nlargest(10, opt.profits, key=lambda x: x[0])
