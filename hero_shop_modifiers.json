@@ -283,7 +283,7 @@
         "name": "zelvi",
         "buffs": {
             "drink": 0.3,
-            "gourmet": 0.42
+            "food": 0.42
         }
     },
     {
