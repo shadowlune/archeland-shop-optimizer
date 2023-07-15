@@ -264,5 +264,26 @@
             "light": 0.2,
             "food": 0.2
         }
+    },
+    {
+        "name": "summeravia",
+        "buffs": {
+            "shell": 0.42,
+            "decoration": 0.2
+        }
+    },
+    {
+        "name": "kirilr",
+        "buffs": {
+            "light": 0.3,
+            "flower": 0.42
+        }
+    },
+    {
+        "name": "zelvi",
+        "buffs": {
+            "drink": 0.3,
+            "gourmet": 0.42
+        }
     }
 ]
