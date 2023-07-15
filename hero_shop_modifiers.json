@@ -285,5 +285,12 @@
             "drink": 0.3,
             "gourmet": 0.42
         }
+    },
+    {
+        "name": "silva",
+        "buffs": {
+            "flower": 0.3,
+            "diary": 0.42
+        }
     }
 ]
