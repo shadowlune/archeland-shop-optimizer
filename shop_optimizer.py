@@ -167,6 +167,7 @@ class ShopOptimizerV2:
     #    1       .42      .3    .2  .....  ->
     def __build_matrices(self):
         # Build the item matrix, factoring in all buffs
+        self.item_prices = np.array([shop_item.income.silver for shop_item in self.shop_dict.values()])
         self.item_matrix = np.array([[
                 shop_item.income.silver
                 if buff in shop_item.buff_types
@@ -211,7 +212,7 @@ class ShopOptimizerV2:
             np.array([shop_item.income.silver for shop_item in self.shop_dict.values()]).reshape(-1,1),
             self.item_matrix
         ))
-        print(item_matrix.shape)
+        # print(item_matrix.shape)
 
         self.profits = []
         for hero_combo in tqdm(self.hero_combos):
@@ -229,12 +230,16 @@ class ShopOptimizerV2:
         # hero_matrix = np.hstack((np.ones((X.shape[0], 1)), X))
 
         self.profits = []
+        # We want to generate all combinations of 5 heroes out of 7.
+        candidate_hero_indices = [list(mask) for mask in combinations(range(7), r=5)]
+
         for item_combo in tqdm(self.item_combos):
-            profit, hero_combo = self.__eval_item_hero_set(item_combo, self.hero_matrix)
-            heapq.heappush(self.profits, (profit, item_combo, hero_combo))
-            if profit >= max_profit:
-                max_profit = profit
-                item_idxs, hero_idxs = item_combo, hero_combo
+            for profit, hero_combo in self.__eval_item_hero_set(item_combo, candidate_hero_indices):
+            # profit, hero_combo = self.__eval_item_hero_set(item_combo, candidate_hero_indices)
+                heapq.heappush(self.profits, (profit, item_combo, hero_combo))
+                if profit >= max_profit:
+                    max_profit = profit
+                    item_idxs, hero_idxs = item_combo, hero_combo
 
         return max_profit, item_idxs, hero_idxs
 
@@ -246,7 +251,7 @@ class ShopOptimizerV2:
         # Prepend 1 to the vector to account for base income dot product
         hero_vector = np.insert(hero_vector, 0, 1, axis=0)
         prod = item_matrix @ hero_vector
-        print(prod)
+
         # https://stackoverflow.com/questions/6910641/how-do-i-get-indices-of-n-maximum-values-in-a-numpy-array
         top_six_indices = np.argpartition(prod, -6)[-6:]
         profit = np.sum(prod[top_six_indices])
@@ -254,17 +259,19 @@ class ShopOptimizerV2:
 
 
     # This variant takes an item combo and evaluates against a fixed hero matrix
-    def __eval_item_hero_set(self, item_combo, hero_matrix):
+    def __eval_item_hero_set(self, item_combo, candidate_hero_indices):
         item_submatrix = self.item_matrix[item_combo]
         item_vector = np.sum(item_submatrix, axis=0)
-        prod = hero_matrix @ item_vector
+        prod = self.hero_matrix @ item_vector
 
-        top_five_indices = np.argpartition(prod, -5)[-5:]
-        base_profit = np.sum(np.max(item_submatrix, axis=1))
-        bonus_profit = np.sum(prod[top_five_indices])
-        profit = base_profit + bonus_profit
-        return profit, list(top_five_indices)
+        base_profit = np.sum(self.item_prices[item_combo])
+        top_seven_hero_indices = np.argpartition(prod, -7)[-7:]
 
+        for hero_index_subset in candidate_hero_indices:
+            five_hero_indices = top_seven_hero_indices[hero_index_subset]
+            bonus_profit = np.sum(prod[five_hero_indices])
+            profit = base_profit + bonus_profit
+            yield profit, list(five_hero_indices)
 
 
 
@@ -281,7 +288,7 @@ opt = ShopOptimizerV2()
 max_profit, item_idxs, hero_idxs = opt.run(hero_combo=False)
 
 
-top_ten_profits = heapq.nlargest(10, opt.profits, key=lambda x: x[0])
+top_ten_profits = heapq.nlargest(10, opt.profits) #  key=lambda x: x[0]
 
 for rank, (profit, item_idxs, hero_idxs) in enumerate(top_ten_profits):
     print_profit_info(opt, rank, profit, item_idxs, hero_idxs)
