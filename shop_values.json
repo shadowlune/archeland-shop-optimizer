@@ -5,7 +5,7 @@
         "types": ["drink", "dairy", "gourmet"],
         "values": {
             "silver": 5,
-            "gold": 20,
+            "gold": 40,
             "powder": 0
         }
     },
@@ -14,19 +14,19 @@
         "cn_name": "极光螺皇",
         "types": ["magic", "shell", "decoration"],
         "values": {
-            "silver": 5,
-            "gold": 0,
-            "powder": 2
+            "silver": 6,
+            "gold": 30,
+            "powder": 1
         }
     },
     {
         "name": "elf_necklace",
-        "cn_name": "打精灵之泣",
+        "cn_name": "大精灵之泣",
         "types": ["magic", "necklace", "decoration"],
         "values": {
             "silver": 4,
-            "gold": 25,
-            "powder": 2
+            "gold": 40,
+            "powder": 1
         }
     },
     {
@@ -35,7 +35,7 @@
         "types": ["drink", "dairy"],
         "values": {
             "silver": 5,
-            "gold": 10,
+            "gold": 15,
             "powder": 0
         }
     },
@@ -44,9 +44,9 @@
         "cn_name": "???",
         "types": ["shell", "magic"],
         "values": {
-            "silver": 5,
-            "gold": 0,
-            "powder": 1
+            "silver": 6,
+            "gold": 10,
+            "powder": 0
         }
     },
     {
@@ -55,8 +55,8 @@
         "types": ["necklace", "magic"],
         "values": {
             "silver": 4,
-            "gold": 12,
-            "powder": 1
+            "gold": 20,
+            "powder": 0
         }
     },
     {
@@ -65,7 +65,7 @@
         "types": ["gourmet", "dairy", "food"],
         "values": {
             "silver": 0,
-            "gold": 50,
+            "gold": 70,
             "powder": 0
         }
     },
@@ -105,8 +105,8 @@
         "types": ["light", "magic"],
         "values": {
             "silver": 0,
-            "gold": 20,
-            "powder": 2
+            "gold": 30,
+            "powder": 1
         }
     },
     {
@@ -165,7 +165,7 @@
         "types": ["food", "dairy", "gourmet"],
         "values": {
             "silver": 0,
-            "gold": 35,
+            "gold": 40,
             "powder": 0
         }
     },
@@ -174,9 +174,9 @@
         "cn_name": "辉光火炬",
         "types": ["light", "magic", "decoration"],
         "values": {
-            "silver": 0,
-            "gold": 35,
-            "powder": 3
+            "silver": 2,
+            "gold": 50,
+            "powder": 1
         }
     }
 ]

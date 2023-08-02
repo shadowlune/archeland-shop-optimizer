@@ -292,5 +292,19 @@
             "flower": 0.3,
             "dairy": 0.42
         }
+    },
+    {
+        "name": "morgan",
+        "buffs": {
+            "flower": 0.3,
+            "dairy": 0.3
+        }
+    },
+    {
+        "name": "delilah",
+        "buffs": {
+            "shell": 0.3,
+            "magic": 0.3
+        }
     }
 ]
